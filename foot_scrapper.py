@@ -10,11 +10,14 @@ Usage:
 
 Options:
     -n --number <number>         Number of matchs to get [default: 10]
+    --dump                       Dump full json response (for debugging purpose)
 """
 
+import json
 import logging
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -38,6 +41,9 @@ headers = {"x-rapidapi-host": "v3.football.api-sports.io", "x-rapidapi-key": API
 url = f"https://v3.football.api-sports.io/fixtures?team={args['<team_id>']}&next={args['--number']}"
 response = requests.get(url, headers=headers)
 data = response.json()
+if args["--dump"]:
+    json.dump(data, sys.stdout, indent=2)
+    exit()
 if data["errors"] == []:
     for match in data["response"]:
         try:
