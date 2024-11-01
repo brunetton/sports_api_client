@@ -51,7 +51,7 @@ if data["errors"] == []:
                 if re_match:
                     round_str = f" - round {re_match.group(0)}"
             league = f"{match['league']['name']} ({match['league']['country']}){round_str}"
-            print(f"{date.strftime('%Y-%m-%d')}: {home_team} vs {away_team} — {league}")
+            print(f"{date.strftime('%a %Y-%m-%d')}: {home_team} vs {away_team} — {league}")
         except Exception as e:
             log.info(match)
             raise e
