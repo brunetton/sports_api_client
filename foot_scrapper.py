@@ -21,9 +21,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+import pytz
 import requests
 from docopt import docopt
 from dotenv import load_dotenv
+from tzlocal import get_localzone
 
 # Init
 log = logging.getLogger()
@@ -50,6 +52,10 @@ if data["errors"] == []:
             home_team = match["teams"]["home"]["name"]
             away_team = match["teams"]["away"]["name"]
             date = datetime.fromisoformat(match["fixture"]["date"])
+            # Make date "aware" of current timezone
+            utc_date = date.replace(tzinfo=pytz.UTC)
+            local_date = utc_date.astimezone(get_localzone())
+
             round = match["league"].get("round")
             if round:
                 # extract round number from round name. Ex: "Regular Season - 16" -> "16"
@@ -57,7 +63,7 @@ if data["errors"] == []:
                 if re_match:
                     round_str = f" - round {re_match.group(0)}"
             league = f"{match['league']['name']} ({match['league']['country']}){round_str}"
-            print(f"{date.strftime('%a %Y-%m-%d')}: {home_team} vs {away_team} — {league}")
+            print(f"{local_date.strftime('%a %Y-%m-%d %H:%M')}: {home_team} vs {away_team} — {league}")
         except Exception as e:
             log.info(match)
             raise e
