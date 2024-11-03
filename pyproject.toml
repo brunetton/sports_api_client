@@ -1,7 +1,7 @@
 [project]
-name = "sampleproject"
-version = "3.0.0"
-description = "A sample Python project"
+name = "footScrapper"
+version = "1.0.0"
+description = "Python command line interface to list upcoming matchs for given team (using allsportsapi.com)"
 dependencies = [
   "docopt",
   "dotenv",
