@@ -1,0 +1,12 @@
+[project]
+name = "sampleproject"
+version = "3.0.0"
+description = "A sample Python project"
+dependencies = [
+  "docopt",
+  "dotenv",
+  "tzlocal"
+]
+
+[tool.ruff]
+line-length = 110
