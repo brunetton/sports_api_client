@@ -14,6 +14,7 @@ Options:
 """
 
 import json
+import locale
 import logging
 import os
 import re
@@ -21,6 +22,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+import human_readable
 import pytz
 import requests
 from docopt import docopt
@@ -55,15 +57,23 @@ if data["errors"] == []:
             # Make date "aware" of current timezone
             utc_date = date.replace(tzinfo=pytz.UTC)
             local_date = utc_date.astimezone(get_localzone())
+            # Prepare human-readable representation (ex "in 3 hours")
+            ## Remove timezone info to prevent a bug from human_readable
+            no_tmz = local_date.replace(tzinfo=None)
+            locale_str = locale.getlocale()[0]  # ex: "fr_FR"
+            human_readable.i18n.activate(locale_str)
+            human_readable_str = human_readable.date_time(no_tmz)
 
             round = match["league"].get("round")
             if round:
                 # extract round number from round name. Ex: "Regular Season - 16" -> "16"
-                re_match = re.search("(\d+)", round)
+                re_match = re.search(r"(\d+)", round)
                 if re_match:
                     round_str = f" - round {re_match.group(0)}"
             league = f"{match['league']['name']} ({match['league']['country']}){round_str}"
-            print(f"{local_date.strftime('%a %Y-%m-%d %H:%M')}: {home_team} vs {away_team} — {league}")
+            print(
+                f"{local_date.strftime('%a %Y-%m-%d %H:%M')} ({human_readable_str}): {home_team} vs {away_team} — {league}"
+            )
         except Exception as e:
             log.info(match)
             raise e
