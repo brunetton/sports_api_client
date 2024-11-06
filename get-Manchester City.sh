@@ -1,2 +1,2 @@
 echo "-> Manchester City"
-./foot_scrapper.py team 50 -n 5
+uv run ./foot_scrapper.py team 50 -n 5

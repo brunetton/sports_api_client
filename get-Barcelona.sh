@@ -1,2 +1,2 @@
 echo "-> FC Barcelona"
-./foot_scrapper.py team 529 -n 5
+uv run ./foot_scrapper.py team 529 -n 5
